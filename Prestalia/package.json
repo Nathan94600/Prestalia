@@ -1,0 +1,41 @@
+{
+  "name": "prestalia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/base/server.js",
+  "scripts": {
+    "format": "prettier --write src/**/*.ts",
+    "lint": "eslint src/**/*.ts --max-warnings=0",
+    "lint:fix": "eslint src/**/*.ts --max-warnings=0 --fix",
+    "build": "npx tsc -b",
+    "predev": "npm run lint:fix && npm run format && npm run build",
+    "start": "node dist/base/server.js",
+    "dev": "npm run predev && node dist/base/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "busboy": "^1.6.0",
+    "chokidar": "^5.0.0",
+    "dotenv": "^17.4.2",
+    "ejs": "^6.0.1",
+    "file-type": "^22.0.1",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.22.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/busboy": "^1.5.4",
+    "@types/ejs": "^3.1.5",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.9.1",
+    "eslint": "^10.4.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "prettier": "^3.8.3",
+    "tslib": "^2.8.1",
+    "typescript-eslint": "^8.60.0"
+  }
+}

@@ -1,0 +1,84 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: #f0f4ff; color: #333; }
+main { padding: 0; }
+
+.search-hero {
+  background: #f0f4ff;
+  padding: 2rem 2rem 1.8rem;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 1rem; text-align: center;
+}
+.search-hero h2 { color: #1a237e; font-size: 1.3rem; font-weight: 700; }
+.search-row {
+  display: flex; width: 100%; max-width: 600px;
+  background: white; border-radius: 50px; overflow: hidden;
+  border: 2px solid #1a237e;
+}
+.search-row input {
+  flex: 1; border: none; outline: none;
+  padding: 0.8rem 1.5rem; font-size: 0.95rem; color: #1a237e;
+}
+.search-row button {
+  background: #1a237e; color: white; border: none;
+  padding: 0.8rem 1.8rem; font-weight: 700;
+  border-radius: 0 50px 50px 0; cursor: pointer; font-size: 0.95rem;
+}
+.search-row button:hover { background: #283593; }
+
+.main-body {
+  display: flex; gap: 5.5rem; padding: 2rem;
+  align-items: flex-start; margin: 0 auto;
+}
+.sidebar {
+  width: 240px; flex-shrink: 0; background: white;
+  border-radius: 16px; padding: 1.5rem; border: 1px solid #dde3f8;
+  position: sticky; top: 1rem;
+}
+.sidebar h3 { font-size: 1rem; font-weight: 700; color: #1a237e; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid #eef0ff; }
+.filter-group { margin-bottom: 1.5rem; }
+.filter-group > label { font-size: 0.8rem; color: #5c6bc0; font-weight: 700; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.cat-list { display: flex; flex-direction: column; gap: 8px; }
+.cat-list label { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; color: #333; cursor: pointer; }
+.cat-list input[type=checkbox] { accent-color: #1a237e; width: 15px; height: 15px; }
+.price-val { font-size: 1rem; color: #1a237e; font-weight: 800; margin-bottom: 8px; display: block; }
+.price-slider { width: 100%; accent-color: #1a237e; cursor: pointer; }
+.price-ends { display: flex; justify-content: space-between; font-size: 0.75rem; color: #aaa; margin-top: 4px; }
+.apply-btn { width: 100%; padding: 0.7rem; background: #1a237e; color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 0.5rem; }
+.apply-btn:hover { background: #283593; }
+
+.results-area { flex: 1; }
+.results-count { font-size: 0.88rem; color: #5c6bc0; font-weight: 600; margin-bottom: 1rem; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.2rem; }
+
+.card { background: white; border-radius: 16px; overflow: hidden; border: 1px solid #dde3f8; text-decoration: none; color: inherit; display: block; transition: transform 0.2s, border-color 0.2s; }
+.card:hover { transform: translateY(-5px); border-color: #5c6bc0; }
+.card-avatar { width: 100%; height: 140px; display: flex; align-items: center; justify-content: center; font-size: 2.8rem; font-weight: 800; color: white; background: linear-gradient(135deg, #283593, #5c6bc0); }
+.card-body { padding: 1rem; }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; gap: 6px; }
+.card-name { font-size: 1rem; font-weight: 700; color: #1a237e; }
+.badge-verified { background: #e8f5e9; color: #2e7d32; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 50px; border: 1px solid #a5d6a7; white-space: nowrap; flex-shrink: 0; }
+.card-cat { font-size: 0.78rem; color: #5c6bc0; font-weight: 600; margin-bottom: 5px; }
+.card-addr { font-size: 0.78rem; color: #888; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+.card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f0f4ff; padding-top: 10px; }
+.price { font-size: 1.05rem; font-weight: 800; color: #1a237e; }
+.btn-profil { background: #1a237e; color: white; font-size: 0.75rem; font-weight: 700; padding: 6px 14px; border-radius: 20px; border: none; cursor: pointer; }
+.btn-profil:hover { background: #283593; }
+.empty { color: #888; grid-column: 1/-1; text-align: center; padding: 2rem 0; }
+
+.btn-fav {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #c7d2fe;
+  padding: 4px;
+  transition: color 0.15s, transform 0.15s;
+  line-height: 1;
+}
+.btn-fav:hover { color: #e11d48; transform: scale(1.2); }
+.btn-fav.fav-active { color: #e11d48; }
+
+@media (max-width: 768px) {
+  .main-body { flex-direction: column; padding: 1rem; }
+  .sidebar { width: 100%; position: static; }
+}

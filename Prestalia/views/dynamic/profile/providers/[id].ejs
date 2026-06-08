@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title><%= provider.name %> — Prestalia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/profil.css">
+</head>
+<body>
+  <%- include(typeof user !== "undefined" ? "/header" : "/default-header") %>
+  <main>
+    <div class="container">
+
+      <!-- ── En-tête ─────────────────────────────────────── -->
+      <div class="profile-header">
+        <div class="avatar-initials">
+          <%= provider.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() %>
+        </div>
+        <div class="header-info">
+          <h1><%= provider.name %></h1>
+          <p class="category"><%= provider.category_name ?? 'Prestataire' %></p>
+          <div class="stats">
+            <span class="star">★</span>
+            <strong style="color:white;">4.8</strong>
+            <span style="color:rgba(255,255,255,0.6)">(124 avis)</span>
+            <% if (provider.city) { %>
+              <span style="margin-left:10px;">
+                <i class="fa-solid fa-location-dot"></i> <%= provider.city %>
+              </span>
+            <% } %>
+          </div>
+          <div class="tags">
+            <span class="tag"><%= provider.category_name ?? 'Service' %></span>
+            <% if (provider.exp) { %>
+              <span class="tag"><%= provider.exp %> ans d'expérience</span>
+            <% } %>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary">
+              <i class="fa-solid fa-phone"></i> Contacter
+            </button>
+            <a href="/reserver/<%= provider.id %>" class="btn btn-outline">
+              <i class="fa-regular fa-calendar"></i> Réserver
+            </a>
+            <% if (typeof user !== 'undefined') { %>
+              <button class="btn btn-outline fav-toggle-btn <%= isFavorite ? 'fav-active' : '' %>"
+                      id="favBtn"
+                      data="toggleFav(<%= provider.id %>)"
+                      title="<%= isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' %>">
+                <i class="<%= isFavorite ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
+              </button>
+            <% } %>
+          </div>
+        </div>
+        <% if (provider.valided) { %>
+          <div class="verified-badge">
+            <i class="fa-solid fa-circle-check"></i> Vérifié
+          </div>
+        <% } %>
+      </div>
+
+      <!-- ── Contenu principal ───────────────────────────── -->
+      <div class="profile-content">
+        <div class="main-column">
+
+          <section>
+            <h2>À propos</h2>
+            <p><%= provider.descr ?? 'Aucune description fournie.' %></p>
+          </section>
+
+          <section>
+            <h2>Galerie</h2>
+            <% if (gallery && gallery.length > 0) { %>
+              <div class="galerie-grid">
+                <% gallery.forEach(function(img) { %>
+                  <a href="<%= img %>" target="_blank" rel="noopener">
+                    <img src="<%= img %>" alt="Photo de travail" loading="lazy">
+                  </a>
+                <% }) %>
+              </div>
+            <% } else { %>
+              <p style="color:#94a3b8;font-size:0.9rem;">Aucune photo disponible.</p>
+            <% } %>
+
+            <% if (provider.instagram || provider.tiktok) { %>
+              <div style="margin-top:1rem;display:flex;gap:12px;flex-wrap:wrap;">
+                <% if (provider.instagram) { %>
+                  <a href="<%= provider.instagram %>" target="_blank" rel="noopener"
+                     style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:#fce4ec;color:#c2185b;font-size:0.85rem;font-weight:600;text-decoration:none;">
+                    <i class="fa-brands fa-instagram"></i> Instagram
+                  </a>
+                <% } %>
+                <% if (provider.tiktok) { %>
+                  <a href="<%= provider.tiktok %>" target="_blank" rel="noopener"
+                     style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:#e8f5e9;color:#1b5e20;font-size:0.85rem;font-weight:600;text-decoration:none;">
+                    <i class="fa-brands fa-tiktok"></i> TikTok
+                  </a>
+                <% } %>
+              </div>
+            <% } %>
+          </section>
+
+          <section>
+            <h2>Avis clients</h2>
+            <div class="review">
+              <strong>Client 1</strong>
+              <div class="star">★★★★☆</div>
+              <p>Excellent service, très professionnel et ponctuel. Je recommande vivement !</p>
+              <span class="review-date">Il y a 1 jour</span>
+            </div>
+            <div class="review">
+              <strong>Client 2</strong>
+              <div class="star">★★★★★</div>
+              <p>Très réactif, travail soigné. Parfait du début à la fin.</p>
+              <span class="review-date">Il y a 3 jours</span>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- ── Sidebar ─────────────────────────────────── -->
+        <div class="sidebar">
+
+          <div class="sidebar-card">
+            <div class="price-label">Tarification</div>
+            <div class="price-big">
+              <%= provider.price ? provider.price + '€' : 'Sur devis' %>
+              <% if (provider.price) { %><span>/heure</span><% } %>
+            </div>
+            <div class="price-note">Tarif indicatif</div>
+          </div>
+
+          <div class="sidebar-card">
+            <h3>Informations</h3>
+            <ul class="sidebar-list">
+              <li>
+                <span><i class="fa-regular fa-clock"></i> Temps de réponse</span>
+                <span>&lt; 1h</span>
+              </li>
+              <li>
+                <span><i class="fa-solid fa-briefcase"></i> Expérience</span>
+                <span><%= provider.exp ? provider.exp + ' ans' : 'N/A' %></span>
+              </li>
+              <li>
+                <span><i class="fa-solid fa-check"></i> Prestations réalisées</span>
+                <span>456</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="sidebar-card">
+            <h3>Disponibilités</h3>
+            <ul class="sidebar-list">
+              <% const daysMap = [
+                { label: 'Lundi',     bit: 1  },
+                { label: 'Mardi',     bit: 2  },
+                { label: 'Mercredi',  bit: 4  },
+                { label: 'Jeudi',     bit: 8  },
+                { label: 'Vendredi',  bit: 16 },
+                { label: 'Samedi',    bit: 32 },
+                { label: 'Dimanche',  bit: 64 },
+              ]; %>
+              <% daysMap.forEach(d => { %>
+                <li>
+                  <%= d.label %>
+                  <% if (provider.days & d.bit) { %>
+                    <span class="status-available">Disponible</span>
+                  <% } else { %>
+                    <span class="status-busy">Indisponible</span>
+                  <% } %>
+                </li>
+              <% }) %>
+            </ul>
+          </div>
+
+          <div class="sidebar-card">
+            <h3>Contact</h3>
+            <% if (provider.tel) { %>
+              <a href="tel:<%= provider.tel %>" class="contact-link">
+                <i class="fa-solid fa-phone"></i> <%= provider.tel %>
+              </a>
+            <% } %>
+            <% if (provider.email) { %>
+              <a href="mailto:<%= provider.email %>" class="contact-link">
+                <i class="fa-regular fa-envelope"></i> <%= provider.email %>
+              </a>
+            <% } %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+  <%- include("/footer") %>
+  <style>
+    .fav-toggle-btn { padding: 10px 14px; }
+    .fav-toggle-btn.fav-active { background: rgba(225,29,72,0.15); border-color: #e11d48; color: #e11d48; }
+    .fav-toggle-btn.fav-active i { color: #e11d48; }
+  </style>
+  <script>
+  function toggleFav(providerId) {
+    var btn = document.getElementById('favBtn');
+    var icon = btn.querySelector('i');
+    fetch('/api/favorites', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: 'provider_id=' + providerId
+    }).then(function(r){ return r.json(); }).then(function(data) {
+      if (data.action === 'added') {
+        icon.className = 'fa-solid fa-heart';
+        btn.classList.add('fav-active');
+        btn.title = 'Retirer des favoris';
+      } else {
+        icon.className = 'fa-regular fa-heart';
+        btn.classList.remove('fav-active');
+        btn.title = 'Ajouter aux favoris';
+      }
+    });
+  }
+  </script>
+</body>
+</html>

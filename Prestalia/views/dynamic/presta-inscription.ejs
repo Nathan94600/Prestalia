@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title>Inscription Prestataire</title>
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/presta-inscription.css">
+</head>
+<body>
+  <%- include("/header") %>
+  <div class="container">
+    <div class="header">
+      <h1>Devenir prestataire</h1>
+      <p>Rejoignez notre communauté de professionnels</p>
+    </div>
+    <div class="stepper">
+      <div class="step active" id="s1">
+        <div class="step-circle">1</div>
+        <div class="step-label">Infos</div>
+      </div>
+      <div class="step" id="s2">
+        <div class="step-circle">2</div>
+        <div class="step-label">Activité</div>
+      </div>
+      <div class="step" id="s3">
+        <div class="step-circle">3</div>
+        <div class="step-label">Dispos</div>
+      </div>
+      <div class="step" id="s4">
+        <div class="step-circle">4</div>
+        <div class="step-label">Validation</div>
+      </div>
+    </div>
+    <div class="card">
+      <form id="regForm" method="post" action="/api/signup/provider" enctype="multipart/form-data">
+        <div class="form-section active">
+          <h2>Informations personnelles</h2>
+          <div class="grid">
+            <div class="form-group full-width">
+              <label for="name">Nom complet *</label>
+              <input type="text" name="name" placeholder="Ex: Jean Dupont" value="<%= user.name %>">
+            </div>
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" name="email" placeholder="email@exemple.com" value="<%= user.email %>">
+            </div>
+            <div class="form-group">
+              <label for="tel">Téléphone *</label>
+              <input type="tel" name="tel" placeholder="06 00 00 00 00">
+            </div>
+            <div class="form-group full-width">
+              <label for="city">Ville *</label>
+              <input type="text" name="city" placeholder="Ex: Paris (75)">
+            </div>
+          </div>
+        </div>
+        <div class="form-section">
+          <h2>Activité professionnelle</h2>
+          <div class="form-group">
+            <label>Catégorie principale *</label>
+            <select id="cat" name="category">
+              <option value="">Choisir...</option>
+              <% for (const category of categories) { %>
+                <option value="<%= category.id %>"><%= category.name %></option>
+              <% } %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="descr">Description *</label>
+            <textarea name="descr" rows="4" placeholder="Décrivez votre expérience..."></textarea>
+          </div>
+          <div class="grid">
+            <div class="form-group">
+              <label for="exp">Expérience (ans) *</label>
+              <input type="number" name="exp" min="0">
+            </div>
+            <div class="form-group">
+              <label for="price">Tarif horaire (€) *</label>
+              <input type="number" name="price" min="0" step="0.01">
+            </div>
+          </div>
+        </div>
+        <div class="form-section">
+          <h2>Disponibilités</h2>
+          <label>Jours de disponibilité *</label>
+          <div class="days-grid">
+            <div class="day-btn">
+              <label for="monday">Lundi</label>
+              <input type="checkbox" name="monday" id="monday">
+            </div>
+            <div class="day-btn">
+              <label for="tuesday">Mardi</label>
+              <input type="checkbox" name="tuesday" id="tuesday">
+            </div>
+            <div class="day-btn">
+              <label for="wednesday">Mercredi</label>
+              <input type="checkbox" name="wednesday" id="wednesday">
+            </div>
+            <div class="day-btn">
+              <label for="thursday">Jeudi</label>
+              <input type="checkbox" name="thursday" id="thursday">
+            </div>
+            <div class="day-btn">
+              <label for="friday">Vendredi</label>
+              <input type="checkbox" name="friday" id="friday">
+            </div>
+            <div class="day-btn">
+              <label for="saturday">Samedi</label>
+              <input type="checkbox" name="saturday" id="saturday">
+            </div>
+            <div class="day-btn">
+              <label for="sunday">Dimanche</label>
+              <input type="checkbox" name="sunday" id="sunday">
+            </div>
+          </div>
+        </div>
+        <div class="form-section">
+          <h2>Validation et documents</h2>
+
+          <div class="form-group">
+            <label for="files">Diplômes / Certificats</label>
+            <div class="upload-zone" id="dropzone" style="position:relative;">
+              <p>Glissez vos fichiers ou <strong>cliquez ici</strong></p>
+              <input type="file" name="files" id="fileInput" multiple style="opacity:0;position:absolute;top:0;left:0;width:100%;height:100%;">
+              <div class="file-list" id="fileList"></div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:1.25rem;">
+            <label>
+              Photos de vos travaux *
+              <span style="font-weight:400;color:#64748b;font-size:0.85rem;">(minimum 3 photos — JPG, PNG, WEBP)</span>
+            </label>
+            <div class="upload-zone" id="galleryZone" style="position:relative;">
+              <p>Glissez vos photos ou <strong>cliquez ici</strong></p>
+              <input type="file" name="gallery" id="galleryInput" multiple accept="image/*"
+                     style="opacity:0;position:absolute;top:0;left:0;width:100%;height:100%;">
+              <div class="file-list" id="galleryList"></div>
+            </div>
+            <p id="galleryError" style="color:#dc2626;font-size:0.82rem;margin-top:4px;display:none;">
+              Veuillez sélectionner au moins 3 photos.
+            </p>
+          </div>
+
+          <div class="grid" style="margin-top:1.25rem;">
+            <div class="form-group">
+              <label for="instagram">Instagram <span style="font-weight:400;color:#64748b;">(optionnel)</span></label>
+              <input type="url" name="instagram" id="instagram" placeholder="https://instagram.com/votre_compte">
+            </div>
+            <div class="form-group">
+              <label for="tiktok">TikTok <span style="font-weight:400;color:#64748b;">(optionnel)</span></label>
+              <input type="url" name="tiktok" id="tiktok" placeholder="https://tiktok.com/@votre_compte">
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top:1.25rem;">
+            <div id="summaryContent" style="font-size:14px;line-height:1.6;"></div>
+          </div>
+          <div class="warning-box">
+            <span>⚠️</span>
+            <div>Étude de votre dossier sous 48h. Un email vous sera envoyé après validation.</div>
+          </div>
+        </div>
+        <div class="footer-btns">
+          <button type="button" class="btn btn-prev hidden" id="btnPrev">Précédent</button>
+          <button type="button" class="btn btn-next" id="btnNext">Suivant</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <%- include("/footer") %>
+  <script>
+    let currentStep = 0;
+
+    const sections = document.querySelectorAll(".form-section"),
+      steps = document.querySelectorAll(".step"),
+      btnNext = document.getElementById("btnNext"),
+      btnPrev = document.getElementById("btnPrev"),
+      form = document.getElementById("regForm");
+
+    function showStep(n) {
+      sections.forEach((s, i) => s.classList.toggle("active", i === n));
+      steps.forEach((s, i) => {
+        s.classList.toggle("active", i === n);
+        s.classList.toggle("completed", i < n);
+        s.querySelector(".step-circle").innerHTML = i < n ? "✓" : (i + 1);
+      });
+
+      btnPrev.classList.toggle("hidden", n === 0);
+
+      if (n === sections.length - 1) {
+        btnNext.innerHTML = "Finaliser";
+
+        updateSummary();
+      } else btnNext.innerHTML = "Suivant";
+    }
+
+    btnNext.addEventListener("click", () => {
+      if (currentStep < sections.length - 1) {
+        showStep(++currentStep);
+      } else {
+        const galleryInput = document.getElementById("galleryInput");
+        if (galleryInput.files.length < 3) {
+          document.getElementById("galleryError").style.display = "block";
+          return;
+        }
+        form.submit();
+      }
+    });
+
+    btnPrev.addEventListener("click", () => {
+      if (currentStep > 0) showStep(--currentStep);
+    });
+
+    // Upload certificats
+    const fileInput = document.getElementById("fileInput");
+    fileInput.addEventListener("change", () => {
+      const list = document.getElementById("fileList");
+      list.innerHTML = "";
+      Array.from(fileInput.files).forEach(f => list.innerHTML += `<span class="file-badge">${f.name}</span>`);
+    });
+
+    // Upload galerie
+    const galleryInput = document.getElementById("galleryInput");
+    galleryInput.addEventListener("change", () => {
+      const list = document.getElementById("galleryList");
+      list.innerHTML = "";
+      Array.from(galleryInput.files).forEach(f => list.innerHTML += `<span class="file-badge">${f.name}</span>`);
+      document.getElementById("galleryError").style.display =
+        galleryInput.files.length < 3 ? "block" : "none";
+    });
+
+    function updateSummary() {
+      document.getElementById("summaryContent").innerHTML = `
+        <strong>Récapitulatif :</strong><br>
+        Nom : ${document.getElementById("nom").value || "-"}<br>
+        Métier : ${document.getElementById("cat").value || "-"}<br>
+        Ville : ${document.getElementById("ville").value || "-"}
+      `;
+    }
+  </script>
+</body>
+</html>

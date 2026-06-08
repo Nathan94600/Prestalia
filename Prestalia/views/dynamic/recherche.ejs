@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title>Recherche — Prestalia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/recherche.css">
+</head>
+<body>
+  <%- include(typeof user !== "undefined" ? "/header" : "/default-header") %>
+
+  <div class="search-hero">
+    <h2>Trouvez le prestataire idéal</h2>
+    <form class="search-row" action="/recherche" method="get">
+      <input type="text" name="q" placeholder="Plombier, électricien, développeur..." value="<%= query ?? '' %>">
+      <button type="submit">
+        <i class="fa-solid fa-magnifying-glass"></i> Rechercher
+      </button>
+    </form>
+  </div>
+
+  <div class="main-body">
+    <form class="sidebar" action="/recherche" method="get">
+      <% if (query) { %><input type="hidden" name="q" value="<%= query %>"><% } %>
+      <h3><i class="fa-solid fa-sliders"></i> Filtres</h3>
+
+      <div class="filter-group">
+        <label>Catégorie</label>
+        <div class="cat-list">
+          <% categories.forEach(cat => { %>
+            <label>
+              <input type="checkbox" name="cat" value="<%= cat.id %>"
+                <%= selectedCats.includes(cat.id) ? 'checked' : '' %>> <%= cat.name %>
+            </label>
+          <% }) %>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>Prix maximum</label>
+        <span class="price-val" id="priceVal"><%= selectedPrice ? selectedPrice + ' €/h' : 'Sans limite' %></span>
+        <input type="range" class="price-slider" name="price" min="10" max="500"
+          value="<%= selectedPrice ?? 500 %>" step="10"
+          oninput="document.getElementById('priceVal').textContent = this.value + ' €/h'">
+        <div class="price-ends"><span>10 €</span><span>500 €</span></div>
+      </div>
+
+      <button type="submit" class="apply-btn">Appliquer</button>
+    </form>
+
+    <div class="results-area">
+      <div class="results-count">
+        <%= providers.length %> prestataire<%= providers.length > 1 ? 's' : '' %> trouvé<%= providers.length > 1 ? 's' : '' %>
+      </div>
+
+      <div class="cards-grid">
+        <% if (providers.length > 0) { %>
+          <% providers.forEach(p => { %>
+            <a href="/profile/providers/<%= p.provider_id %>" class="card">
+              <div class="card-avatar">
+                <%= p.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase() %>
+              </div>
+              <div class="card-body">
+                <div class="card-top">
+                  <span class="card-name"><%= p.name %></span>
+                  <% if (p.verified) { %>
+                    <span class="badge-verified">✓ Vérifié</span>
+                  <% } %>
+                </div>
+                <div class="card-cat"><%= p.category_name ?? 'Non renseigné' %></div>
+                <div class="card-addr">
+                  <i class="fa-solid fa-location-dot"></i> <%= p.address ?? 'Non renseigné' %>
+                </div>
+                <div class="card-footer">
+                  <span class="price"><%= p.price ? p.price + ' €/h' : 'Sur devis' %></span>
+                  <% if (typeof user !== 'undefined') { %>
+                    <% var isFav = favoriteIds.includes(p.provider_id); %>
+                    <button class="btn-fav <%= isFav ? 'fav-active' : '' %>"
+                            onclick="event.preventDefault(); toggleFav(this, <%= p.provider_id %>)"
+                            title="<%= isFav ? 'Retirer des favoris' : 'Ajouter aux favoris' %>">
+                      <i class="<%= isFav ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
+                    </button>
+                  <% } %>
+                  <button class="btn-profil">Voir profil →</button>
+                </div>
+              </div>
+            </a>
+          <% }) %>
+        <% } else { %>
+          <p class="empty">Aucun prestataire trouvé.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <%- include("/footer") %>
+  <script>
+  function toggleFav(btn, providerId) {
+    fetch('/api/favorites', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: 'provider_id=' + providerId
+    }).then(function(r){ return r.json(); }).then(function(data) {
+      var icon = btn.querySelector('i');
+      if (data.action === 'added') {
+        icon.className = 'fa-solid fa-heart';
+        btn.classList.add('fav-active');
+        btn.title = 'Retirer des favoris';
+      } else {
+        icon.className = 'fa-regular fa-heart';
+        btn.classList.remove('fav-active');
+        btn.title = 'Ajouter aux favoris';
+      }
+    });
+  }
+  </script>
+  <script>
+    const priceSlider = document.querySelector('.price-slider');
+    const sidebarForm = document.querySelector('.sidebar');
+    sidebarForm.addEventListener('submit', function() {
+      if (parseInt(priceSlider.value) >= 500) priceSlider.disabled = true;
+    });
+  </script>
+</body>
+</html>

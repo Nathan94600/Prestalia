@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title>Modifier mon profil — Prestalia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/form_edit_profile.css">
+</head>
+<body>
+  <%- include("/header") %>
+
+  <div class="main-content">
+    <div class="container edit-profile-container">
+      <h1 class="page-title">Modifier mon profil</h1>
+
+      <% if (success) { %>
+        <div class="alert alert-success">
+          <i class="fa-solid fa-circle-check"></i>
+          Votre profil a été mis à jour avec succès.
+        </div>
+      <% } %>
+
+      <% if (editError) { %>
+        <div class="alert alert-error">
+          <i class="fa-solid fa-circle-xmark"></i>
+          Une erreur est survenue. Veuillez réessayer.
+        </div>
+      <% } %>
+
+      <form action="/api/profile/edit" method="POST" enctype="multipart/form-data" class="edit-profile-form">
+
+        <div class="profile-card info-section">
+          <div class="section-title">
+            <i class="fas fa-user"></i> Informations personnelles
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="fullName">Nom complet</label>
+              <input type="text" id="fullName" name="fullName"
+                value="<%= user.name ?? '' %>"
+                placeholder="Votre nom complet">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Adresse email</label>
+              <input type="email" id="email" name="email"
+                value="<%= user.email ?? '' %>"
+                placeholder="Votre adresse email">
+            </div>
+
+            <% if (user.role === 'provider' && provider) { %>
+            <div class="form-group">
+              <label for="phone">Numéro de téléphone</label>
+              <input type="tel" id="phone" name="phone"
+                value="<%= provider.tel ?? '' %>"
+                placeholder="Ex: 06 01 02 03 04">
+            </div>
+
+            <div class="form-group">
+              <label for="city">Ville</label>
+              <input type="text" id="city" name="city"
+                value="<%= provider.city ?? '' %>"
+                placeholder="Ex: Paris">
+            </div>
+
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label for="description">Description</label>
+              <textarea id="description" name="description"
+                placeholder="Décrivez-vous en quelques mots"><%= provider.descr ?? '' %></textarea>
+            </div>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a href="/profile/@me" class="btn-cancel">Annuler</a>
+          <button type="submit" class="btn-submit">Enregistrer les modifications</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <%- include("/footer") %>
+</body>
+</html>
